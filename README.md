@@ -9,20 +9,19 @@ To write a program to implement the the Logistic Regression Model to Predict the
 
 ## Algorithm
 1. Import required libraries.
-2. Load the dataset using read_csv().
-3. Remove unwanted column (salary).
-4. Convert categorical data into numerical form using get_dummies().
-5. Separate input features (X) and output (y).
-6. Split dataset into training and testing data.
-7. Create Logistic Regression model.
-8. Train the model using training data.
-9. Find and print model accuracy.
-10. Select one feature for visualization.
-11. Plot scatter graph of data points.
-12. Predict probabilities using logistic regression.
-13. Draw logistic regression curve.
-14. Add labels and title to graph.
-15. Display the graph.
+2. Load the dataset using pandas.
+3. Create a copy of the dataset.
+4. Remove unnecessary columns (sl_no, salary).
+5. Check for null values and duplicates.
+6. Convert categorical data into numerical data using Label Encoding.
+7. Separate input features (x) and target variable (y).
+8. Split the dataset into training and testing data.
+9. Create the Logistic Regression model.
+10.Train the model using training data.
+11. Predict output using test data.
+12. Calculate accuracy of the model.
+13. Generate classification report.
+14. Predict placement status for new student data.
 
 ## Program:
 ```
@@ -31,34 +30,53 @@ Program to implement the the Logistic Regression Model to Predict the Placement 
 Developed by: cholimgapuram sai likitha
 RegisterNumber:  212224230046
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+data = pd.read_csv("Placement_Data (1).csv")
+print(data.head())
+data1 = data.copy()
+data1 = data1.drop(["sl_no", "salary"], axis=1)
+print(data1.head())
+print(data1.isnull().sum())
+print(data1.duplicated().sum())
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+data1["gender"] = le.fit_transform(data1["gender"])
+data1["ssc_b"] = le.fit_transform(data1["ssc_b"])
+data1["hsc_b"] = le.fit_transform(data1["hsc_b"])
+data1["hsc_s"] = le.fit_transform(data1["hsc_s"])
+data1["degree_t"] = le.fit_transform(data1["degree_t"])
+data1["workex"] = le.fit_transform(data1["workex"])
+data1["specialisation"] = le.fit_transform(data1["specialisation"])
+data1["status"] = le.fit_transform(data1["status"])
+x = data1.iloc[:, :-1]
+y = data1["status"]
+print(x.head())
+print(y.head())
 from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.2, random_state=0
+)
 from sklearn.linear_model import LogisticRegression
-df = pd.read_csv("Placement_Data (1).csv")
-df = pd.get_dummies(df.drop("salary", axis=1), drop_first=True)
-X = df.drop("status_Placed", axis=1)
-y = df["status_Placed"]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-model = LogisticRegression(max_iter=1000)
-model.fit(X_train, y_train)
-print("Accuracy:", model.score(X_test, y_test))
-X1 = X.iloc[:, 0].values.reshape(-1,1)
-model.fit(X1, y)
-plt.scatter(X1, y, color='blue')
-x = np.linspace(X1.min(), X1.max(), 100).reshape(-1,1)
-y_prob = model.predict_proba(x)[:,1]
-plt.plot(x, y_prob, color='red')
-plt.xlabel("Feature")
-plt.ylabel("Probability")
-plt.title("Logistic Regression")
-plt.show() 
+lr = LogisticRegression(solver="liblinear")
+lr.fit(x_train, y_train)
+y_pred = lr.predict(x_test)
+print("Predicted Values:")
+print(y_pred)
+from sklearn.metrics import accuracy_score
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+from sklearn.metrics import classification_report
+classification_report1 = classification_report(y_test, y_pred)
+print(classification_report1)
+prediction = lr.predict([[1, 80, 1, 90, 1, 1, 90, 1, 0, 85, 1, 85]])
+print("Prediction:", prediction)
+if prediction[0] == 1:
+    print("Student is Placed")
+else:
+    print("Student is Not Placed")
 */
 ```
 
 ## Output:
-<img width="1137" height="845" alt="Screenshot 2026-05-08 171238" src="https://github.com/user-attachments/assets/afb471ac-27d9-46ab-bb3d-38e42e49c7d3" />
+<img width="728" height="796" alt="image" src="https://github.com/user-attachments/assets/c2f7b140-42d3-4e69-af69-24935d7e6d20" />
 
-
-## Result:
 Thus the program to implement the the Logistic Regression Model to Predict the Placement Status of Student is written and verified using python programming.

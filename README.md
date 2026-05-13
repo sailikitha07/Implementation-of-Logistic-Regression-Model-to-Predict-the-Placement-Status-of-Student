@@ -78,5 +78,5 @@ else:
 
 ## Output:
 <img width="728" height="796" alt="image" src="https://github.com/user-attachments/assets/c2f7b140-42d3-4e69-af69-24935d7e6d20" />
-
+## Result
 Thus the program to implement the the Logistic Regression Model to Predict the Placement Status of Student is written and verified using python programming.
